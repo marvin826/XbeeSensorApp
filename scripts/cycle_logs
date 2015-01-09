@@ -1,0 +1,19 @@
+#!/bin/bash
+
+datestr=`date +%Y%m%d`
+
+if [ -f ../logs/garage_readings.csv ] ; then
+	mv ../logs/garage_readings.csv ../logs/archive/garage_readings_${datestr}.csv
+fi
+touch ../logs/garage_readings.csv
+
+if [ -f ../logs/temperatures.csv ] ; then
+	mv ../logs/temperatures.csv ../logs/archive/temperatures_${datestr}.csv
+fi
+touch ../logs/temperatures.csv
+
+if [ -f ../logs/XBeeFramework.log ] ; then
+	mv ../logs/XBeeFramework.log ../logs/archive/XBeeFramework_${datestr}.log
+fi
+touch ../logs/XBeeFramework.log
+

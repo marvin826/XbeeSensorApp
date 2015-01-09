@@ -1,0 +1,29 @@
+{
+	"pluginPath" : "~/Projects/Zigbee/application/plugins",
+	"plugins" : 
+	[
+
+
+		{
+			"name" : "WeatherPlugin",
+			"addresses" : 
+			[
+				"0013 a200 408b 4307"
+			],
+			"options" : 
+			{
+				"logFileName" : "/home/gkaiser/Projects/ZigBee/application/logs/temperature_sensor.log"
+			}
+		},
+		{
+			"name" : "GarageSensor",
+			"addresses" :
+			[
+			],
+			"options" : 
+			{
+				"logFileName" : "/home/gkaiser/Projects/ZigBee/application/logs/garage_sensor.log"
+			}
+		}
+	]
+}

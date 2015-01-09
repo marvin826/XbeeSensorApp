@@ -1,0 +1,18 @@
+#!/bin/bash
+
+TIMESTAMP=`date +%Y%m%d%H%M`
+
+XBEEHOME=~/Projects/ZigBee/application
+LOGFILE=${XBEEHOME}/logs/messages_${TIMESTAMP}.log
+FRAMEDBFILE=${XBEEHOME}/data/XBee_API_Frame_Database.json
+PLUGINDB=${XBEEHOME}/data/Plugin_Database.json
+COMMPORT=/dev/ttyS0
+
+source ${XBEEHOME}/testbed/bin/activate
+
+python ${XBEEHOME}/src/XbeeMain.py \
+	--logFile ${LOGFILE} \
+	--frameDBFile ${FRAMEDBFILE} \
+	--pluginDB ${PLUGINDB} \
+	--commPort ${COMMPORT} &
+
