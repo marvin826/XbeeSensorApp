@@ -13,6 +13,15 @@
 			"options" : 
 			{
 				"logFileName" : "/home/gkaiser/Projects/ZigBee/application/logs/temperature_sensor.log"
+			},
+			"follower" :
+			{
+				"name" : "MTTQClient",
+				"options" :
+				{
+					"server" : "localhost",
+					"topic" : "sensor_reading"
+				}
 			}
 		},
 		{

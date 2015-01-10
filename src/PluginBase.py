@@ -5,6 +5,7 @@ class PluginBase(object):
 		super(PluginBase, self).__init__()
 		self.logger = None
 		self.options = None
+		self.follower = None
 
 
 	def init(self, logger, options):
@@ -18,3 +19,8 @@ class PluginBase(object):
 
 	def close(self):
 		self.logger.debug("PluginBase:close")
+
+	def setFollower(self, follower):
+		self.follower = follower
+
+	

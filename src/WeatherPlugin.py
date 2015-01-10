@@ -56,6 +56,19 @@ class WeatherPlugin(pb.PluginBase):
 		                                       supplyVoltage)
 		self.temperature_log.info(tempLogMessage)
 
+		if self.follower is not None:
+			messageObject = {}
+
+			messageObject["name"] = "WeatherSensor"
+			messageObject["address"] = packet['Components']['64-bit Source Address']['address']
+			messageObject["time_stamp"] = packetTimeStamp
+			messageObject["supply_voltage"] = { "value" : supplyVoltage, "units": "volts" }
+			readings = {}
+			readings["temperature"] = { "value" : tempReading, "units" : "degrees F" }
+			messageObject["readings"] = readings
+
+			self.follower.handleMessage(messageObject)
+
 	def close(self):
 
 		return

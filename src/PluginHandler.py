@@ -42,6 +42,15 @@ class PluginHandler():
 				self.logger.debug("Initializing plugin")
 				pluginObject.init(self.logger, pluginDesc["options"])
 
+				if "follower" in pluginDesc:
+					followerName = pluginDesc["follower"]["name"]
+					followerOptions = pluginDesc["follower"]["options"]
+
+					followerObject = self.loadModule(followerName)
+					followerObject.init(self.logger, followerOptions)
+
+					pluginObject.setFollower(followerObject)
+
 				addresses = pluginDesc["addresses"]
 				for address in addresses:
 					if address in self.plugins :

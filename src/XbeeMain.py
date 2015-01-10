@@ -105,9 +105,12 @@ class XbeeMain():
 		self.message_log.debug("received frame type: " + frameType)
 		self.message_log.debug("from address: " + address)
 
-		plugins = self.pluginHandler.getPlugin(address)
-		for plugin in plugins :
-			plugin.handlePacket(packet, env)
+		try:
+			plugins = self.pluginHandler.getPlugin(address)
+			for plugin in plugins :
+				plugin.handlePacket(packet, env)
+		except Exception, e:
+			print "XbeeMain:packetCallback : " + str(e)
 
 		return
 

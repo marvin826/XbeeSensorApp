@@ -31,7 +31,7 @@ class TwitterHelper():
 		self.api = twitter.Api(self.consumer_key = credentials['consumer_key'],
 							   self.consumer_secret = credentials['consumer_secret'],
 							   self.access_token_key = credentials['access_token_key'],
-							   self.access_token_secret = credentials['access_token_secret'])
+							   self. access_token_secret = credentials['access_token_secret'])
 
 		self.messageQueue = Queue.Queue(25)
 		self.message_log.info("TwitterHelper initialized successfully")
