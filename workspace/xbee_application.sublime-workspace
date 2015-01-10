@@ -1,0 +1,424 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"fo",
+				"follower"
+			],
+			[
+				"mod",
+				"mod"
+			],
+			[
+				"init",
+				"init"
+			],
+			[
+				"gara",
+				"garage_log"
+			],
+			[
+				"plu",
+				"pluginFileName"
+			],
+			[
+				"mess",
+				"message_log"
+			],
+			[
+				"handl",
+				"handleSignals"
+			],
+			[
+				"msg",
+				"msg_output"
+			],
+			[
+				"m",
+				"msg_output_port"
+			],
+			[
+				"msg_",
+				"msg_input_port"
+			],
+			[
+				"MQ",
+				"MQTTServiceBase"
+			],
+			[
+				"_",
+				"_mLogger"
+			],
+			[
+				"_mMsg",
+				"_mMsgOutputPort"
+			],
+			[
+				"cur",
+				"cur"
+			],
+			[
+				"temp",
+				"temp_object"
+			],
+			[
+				"tem",
+				"temperatureJSON"
+			],
+			[
+				"mqtt",
+				"mqttc"
+			],
+			[
+				"re",
+				"request"
+			],
+			[
+				"Test",
+				"TestAnotherClass"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/home/gkaiser/Projects/ZigBee/application/src/PluginHandler.py",
+			"settings":
+			{
+				"buffer_size": 2106,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/gkaiser/Projects/ZigBee/application/data/Plugin_Database.json",
+			"settings":
+			{
+				"buffer_size": 613,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "import time\nimport logging\nimport PluginBase as pb\n\nclass WeatherPlugin(pb.PluginBase):\n	\"\"\"docstring for WeatherPlugin\"\"\"\n	def __init__(self):\n		super(WeatherPlugin, self).__init__()\n\n		self.temperature_log = None\n		self.options = None\n	\n	def init(self, logger, options):\n		super(WeatherPlugin, self).init(logger, options)\n\n		self.logger.debug(\"WeatherPlugin : init\")\n		self.options = options\n\n		logFileName = options[\"logFileName\"]\n		temperature_log = logging.getLogger(\"temperatures\")\n		t_log_file = logging.FileHandler(logFileName)\n		temperature_log.addHandler(t_log_file)\n		temperature_log.setLevel(logging.INFO)\n		self.temperature_log = temperature_log\n\n	def handlePacket(self, packet, environment):\n		self.logger.debug(\"WeatherPlugin:handlePacket\")\n\n		updateTime = time.localtime()\n\n		comps = packet[\"Components\"]\n		packetTimeStamp = packet[\"TimeStamp\"]\n		packetTime = packetTimeStamp.split(\"T\")[1]\n		packetDate = packetTimeStamp.split(\"T\")[0]\n\n		analog_values = comps[\"Analog Samples\"][\"values\"]\n\n		rTempReading = analog_values[\"AD0\"]\n		self.logger.debug(\"temp raw: \" + str(rTempReading))\n		rVoltage = analog_values[\"Supply Voltage\"]\n		self.logger.debug(\"supply raw: \" + str(rVoltage))\n\n		tempReading = (rTempReading * 1200.0) / 1023.0\n		tempReading = (tempReading - 500.0) / 10.0\n		tempReading = ((tempReading * 9.0) / 5.0) + 32.0\n		self.logger.debug(\"temperature (F): \" + str(tempReading))\n\n		supplyVoltage = (rVoltage * 1200.0) / 1023.0\n		supplyVoltage = supplyVoltage / 1000.0\n		self.logger.debug(\"supply voltage (V): \" + str(supplyVoltage))\n\n		tempLogMessage = \"{0},{1},{2},{3}\"\n		tempLogMessage = tempLogMessage.format(packetTime,\n		                                       packetDate,\n		                                       tempReading,\n		                                       supplyVoltage)\n		self.temperature_log.info(tempLogMessage)\n\n		if self.follower is not None:\n			messageObject = {}\n\n			messageObject[\"name\"] = \"WeatherSensor\"\n			messageObject[\"address\"] = packet['Components']['64-bit Source Address']['address']\n			messageObject[\"time_stamp\"] = packetTimeStamp\n			messageObject[\"supply_voltage\"] = supplyVoltage\n			readings = {}\n			readings[\"temperature\"] = tempReading\n			messageObject[\"readings\"] = readings\n\n			self.follower.handleMessage(messageObject)\n\n	def close(self):\n\n		return\n",
+			"file": "/home/gkaiser/Projects/ZigBee/application/src/WeatherPlugin.py",
+			"file_size": 1881,
+			"file_write_time": 1420608263000000,
+			"settings":
+			{
+				"buffer_size": 2312,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/gkaiser/Projects/ZigBee/application/src/XbeeMain.py",
+			"settings":
+			{
+				"buffer_size": 4160,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 306.0,
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			],
+			[
+				"pack",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 139.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/gkaiser/Projects/ZigBee/application/src/PluginBase.py",
+		"/home/gkaiser/Projects/ZigBee/application/src/WeatherPlugin.py",
+		"/home/gkaiser/Projects/ZigBee/application/src/PluginHandler.py",
+		"/home/gkaiser/Projects/ZigBee/application/src/TwitterHelper.py",
+		"/home/gkaiser/Projects/ZigBee/application/src/GarageSensor.py",
+		"/home/gkaiser/Projects/ZigBee/xbee_framework/xbeeframework/load_module.py",
+		"/home/gkaiser/Projects/ZigBee/xbee_framework/xbeeframework/XBeeDataType.py",
+		"/home/gkaiser/Projects/ZigBee/xbee_framework/xbeeframework/XBeeInt.py",
+		"/home/gkaiser/Projects/ZigBee/xbee_framework/xbeeframework/XBeeFrameDescriptor.py",
+		"/home/gkaiser/Projects/ZigBee/xbee_framework/xbeeframework/XBeeFrameDatabase.py",
+		"/home/gkaiser/Projects/ZigBee/xbee_framework/xbeeframework/XBeePacketHandler.py",
+		"/home/gkaiser/Projects/ZigBee/xbee_framework/xbeeframework/XBeeReader.py",
+		"/home/gkaiser/Projects/ZigBee/xbee_framework/data/XBee_API_Frame_Database.db",
+		"/home/gkaiser/Projects/ZigBee/application/src/readtemperatures_new.py",
+		"/home/gkaiser/Projects/ZigBee/application/plugins/GarageSensor.py",
+		"/home/gkaiser/Projects/ZigBee/xbee_framework/xbeeframework/test/readtemperatures_new.py",
+		"/home/gkaiser/Projects/ZigBee/xbee_framework/xbeeframework/XBeeConnection.py",
+		"/home/gkaiser/Projects/MQTT/source/door_service.py",
+		"/home/gkaiser/Projects/MQTT/source/ServiceBase.py",
+		"/home/gkaiser/Projects/ZigBee/xbee_framework/xbeeframework/test/sample_processed_packet.json",
+		"/home/gkaiser/Projects/MQTT/source/ServiceApp.py",
+		"/home/gkaiser/Projects/MQTT/source/XBeeService.py",
+		"/home/gkaiser/Projects/MQTT/source/voltage_service.py",
+		"/home/gkaiser/Projects/MQTT/source/reading_emitter_sim_old.py",
+		"/home/gkaiser/Projects/MQTT/source/reading_emitter_sim.py",
+		"/home/gkaiser/Projects/MQTT/.bashrc_mqtt",
+		"/home/gkaiser/Projects/MQTT/garage_service.py",
+		"/home/gkaiser/Projects/MQTT/light_service.py",
+		"/home/gkaiser/Projects/MQTT/reading_emitter_sim.py",
+		"/home/gkaiser/Projects/MQTT/create_sensor_database.py",
+		"/home/gkaiser/Projects/MQTT/test_consumer.py",
+		"/home/gkaiser/Projects/MQTT/test_sender.py",
+		"/home/gkaiser/Projects/Node.js/proxy.js",
+		"/home/gkaiser/Projects/Node.js/example.js",
+		"/home/gkaiser/Projects/Python/import/importtest/TestClass.py",
+		"/home/gkaiser/Projects/Python/import/importtest/TestAnotherClass.py",
+		"/home/gkaiser/Projects/ZigBee/xbee_framework/xbeeframework/test/read_serial.py",
+		"/home/gkaiser/Projects/Python/import/setup.py",
+		"/home/gkaiser/Projects/Python/test/test_import.py",
+		"/home/gkaiser/Projects/Python/import/README.txt",
+		"/home/gkaiser/Projects/Python/test/deploy",
+		"/home/gkaiser/Projects/Python/import/CHANGES.txt",
+		"/home/gkaiser/Projects/Python/import/install/ImportTest-0.1.0/test/test_import.py",
+		"/home/gkaiser/Projects/Python/setup.py",
+		"/home/gkaiser/Projects/Web Sockets/views/home.jade",
+		"/home/gkaiser/Projects/Web Sockets/public/script.js",
+		"/home/gkaiser/Projects/Web Sockets/server.js",
+		"/home/gkaiser/.config/sublime-text-2/Packages/Jade/README.md",
+		"/home/gkaiser/.config/sublime-text-2/Packages/Jade/test_jades/test.jade",
+		"/usr/share/applications/sublime.desktop",
+		"/usr/share/applications/defaults.list"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"MTTQClient",
+			"logging",
+			"pluginDesc[\"name\"]",
+			"message_log",
+			"_port",
+			"MQTT",
+			"MQTTServiceBase",
+			"temp_object",
+			"NoneType",
+			"gedit.desktop"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"self.message_log",
+			"sublime.desktop"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/home/gkaiser/Projects/ZigBee/application/src/PluginHandler.py",
+					"settings":
+					{
+						"buffer_size": 2106,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1259,
+								1259
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 51.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/home/gkaiser/Projects/ZigBee/application/data/Plugin_Database.json",
+					"settings":
+					{
+						"buffer_size": 613,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/home/gkaiser/Projects/ZigBee/application/src/WeatherPlugin.py",
+					"settings":
+					{
+						"buffer_size": 2312,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2281,
+								2281
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 567.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/home/gkaiser/Projects/ZigBee/application/src/XbeeMain.py",
+					"settings":
+					{
+						"buffer_size": 4160,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2582,
+								2582
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1071.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 50.0,
+	"status_bar_visible": true
+}

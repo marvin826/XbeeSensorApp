@@ -1,0 +1,23 @@
+{
+	"folders":
+	[
+		{
+			"path": "/home/gkaiser/Projects/ZigBee/application/data"
+		},
+		{
+			"path": "/home/gkaiser/Projects/ZigBee/application/logs"
+		},
+		{
+			"path": "/home/gkaiser/Projects/ZigBee/application/plugins"
+		},
+		{
+			"path": "/home/gkaiser/Projects/ZigBee/application/scripts"
+		},
+		{
+			"path": "/home/gkaiser/Projects/ZigBee/application/src"
+		},
+		{
+			"path": "/home/gkaiser/Projects/ZigBee/application/testbed"
+		}
+	]
+}
