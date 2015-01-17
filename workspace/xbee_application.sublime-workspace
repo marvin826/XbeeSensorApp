@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"mt",
+				"mqttc"
+			],
+			[
 				"fo",
 				"follower"
 			],
@@ -87,7 +91,7 @@
 			"file": "/home/gkaiser/Projects/ZigBee/application/src/PluginHandler.py",
 			"settings":
 			{
-				"buffer_size": 2106,
+				"buffer_size": 2107,
 				"line_ending": "Unix"
 			}
 		},
@@ -95,26 +99,47 @@
 			"file": "/home/gkaiser/Projects/ZigBee/application/data/Plugin_Database.json",
 			"settings":
 			{
-				"buffer_size": 613,
+				"buffer_size": 655,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "import time\nimport logging\nimport PluginBase as pb\n\nclass WeatherPlugin(pb.PluginBase):\n	\"\"\"docstring for WeatherPlugin\"\"\"\n	def __init__(self):\n		super(WeatherPlugin, self).__init__()\n\n		self.temperature_log = None\n		self.options = None\n	\n	def init(self, logger, options):\n		super(WeatherPlugin, self).init(logger, options)\n\n		self.logger.debug(\"WeatherPlugin : init\")\n		self.options = options\n\n		logFileName = options[\"logFileName\"]\n		temperature_log = logging.getLogger(\"temperatures\")\n		t_log_file = logging.FileHandler(logFileName)\n		temperature_log.addHandler(t_log_file)\n		temperature_log.setLevel(logging.INFO)\n		self.temperature_log = temperature_log\n\n	def handlePacket(self, packet, environment):\n		self.logger.debug(\"WeatherPlugin:handlePacket\")\n\n		updateTime = time.localtime()\n\n		comps = packet[\"Components\"]\n		packetTimeStamp = packet[\"TimeStamp\"]\n		packetTime = packetTimeStamp.split(\"T\")[1]\n		packetDate = packetTimeStamp.split(\"T\")[0]\n\n		analog_values = comps[\"Analog Samples\"][\"values\"]\n\n		rTempReading = analog_values[\"AD0\"]\n		self.logger.debug(\"temp raw: \" + str(rTempReading))\n		rVoltage = analog_values[\"Supply Voltage\"]\n		self.logger.debug(\"supply raw: \" + str(rVoltage))\n\n		tempReading = (rTempReading * 1200.0) / 1023.0\n		tempReading = (tempReading - 500.0) / 10.0\n		tempReading = ((tempReading * 9.0) / 5.0) + 32.0\n		self.logger.debug(\"temperature (F): \" + str(tempReading))\n\n		supplyVoltage = (rVoltage * 1200.0) / 1023.0\n		supplyVoltage = supplyVoltage / 1000.0\n		self.logger.debug(\"supply voltage (V): \" + str(supplyVoltage))\n\n		tempLogMessage = \"{0},{1},{2},{3}\"\n		tempLogMessage = tempLogMessage.format(packetTime,\n		                                       packetDate,\n		                                       tempReading,\n		                                       supplyVoltage)\n		self.temperature_log.info(tempLogMessage)\n\n		if self.follower is not None:\n			messageObject = {}\n\n			messageObject[\"name\"] = \"WeatherSensor\"\n			messageObject[\"address\"] = packet['Components']['64-bit Source Address']['address']\n			messageObject[\"time_stamp\"] = packetTimeStamp\n			messageObject[\"supply_voltage\"] = supplyVoltage\n			readings = {}\n			readings[\"temperature\"] = tempReading\n			messageObject[\"readings\"] = readings\n\n			self.follower.handleMessage(messageObject)\n\n	def close(self):\n\n		return\n",
 			"file": "/home/gkaiser/Projects/ZigBee/application/src/WeatherPlugin.py",
-			"file_size": 1881,
-			"file_write_time": 1420608263000000,
 			"settings":
 			{
-				"buffer_size": 2312,
+				"buffer_size": 2381,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "/home/gkaiser/Projects/ZigBee/application/src/XbeeMain.py",
+			"file": "/home/gkaiser/Projects/ZigBee/application/src/FollowerBase.py",
 			"settings":
 			{
-				"buffer_size": 4160,
+				"buffer_size": 295,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/gkaiser/Projects/MQTT/source/test_sender.py",
+			"settings":
+			{
+				"buffer_size": 353,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/gkaiser/Projects/ZigBee/application/scripts/start_mosquitto",
+			"settings":
+			{
+				"buffer_size": 35,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/gkaiser/Projects/ZigBee/application/src/MQTTClient.py",
+			"settings":
+			{
+				"buffer_size": 2459,
 				"line_ending": "Unix"
 			}
 		}
@@ -151,7 +176,10 @@
 	},
 	"file_history":
 	[
+		"/home/gkaiser/Projects/ZigBee/application/src/MTTQClient.py",
+		"/home/gkaiser/Projects/ZigBee/application/src/XbeeMain.py",
 		"/home/gkaiser/Projects/ZigBee/application/src/PluginBase.py",
+		"/home/gkaiser/Projects/ZigBee/application/src/FollowerBase.py",
 		"/home/gkaiser/Projects/ZigBee/application/src/WeatherPlugin.py",
 		"/home/gkaiser/Projects/ZigBee/application/src/PluginHandler.py",
 		"/home/gkaiser/Projects/ZigBee/application/src/TwitterHelper.py",
@@ -220,6 +248,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"info",
+			"self",
+			"onConnect",
 			"MTTQClient",
 			"logging",
 			"pluginDesc[\"name\"]",
@@ -249,7 +280,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -257,15 +288,15 @@
 					"file": "/home/gkaiser/Projects/ZigBee/application/src/PluginHandler.py",
 					"settings":
 					{
-						"buffer_size": 2106,
+						"buffer_size": 2107,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1259,
-								1259
+								1107,
+								1107
 							]
 						],
 						"settings":
@@ -274,7 +305,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 51.0,
+						"translation.y": 306.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -284,15 +315,15 @@
 					"file": "/home/gkaiser/Projects/ZigBee/application/data/Plugin_Database.json",
 					"settings":
 					{
-						"buffer_size": 613,
+						"buffer_size": 655,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								402,
+								402
 							]
 						],
 						"settings":
@@ -301,7 +332,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 38.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -311,15 +342,15 @@
 					"file": "/home/gkaiser/Projects/ZigBee/application/src/WeatherPlugin.py",
 					"settings":
 					{
-						"buffer_size": 2312,
+						"buffer_size": 2381,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2281,
-								2281
+								2351,
+								2351
 							]
 						],
 						"settings":
@@ -328,25 +359,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 567.0,
+						"translation.y": 867.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "/home/gkaiser/Projects/ZigBee/application/src/XbeeMain.py",
+					"file": "/home/gkaiser/Projects/ZigBee/application/src/FollowerBase.py",
 					"settings":
 					{
-						"buffer_size": 4160,
+						"buffer_size": 295,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2582,
-								2582
+								295,
+								295
 							]
 						],
 						"settings":
@@ -355,7 +386,92 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1071.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/home/gkaiser/Projects/MQTT/source/test_sender.py",
+					"settings":
+					{
+						"buffer_size": 353,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								305,
+								305
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/home/gkaiser/Projects/ZigBee/application/scripts/start_mosquitto",
+					"settings":
+					{
+						"buffer_size": 35,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								33,
+								33
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 6,
+					"file": "/home/gkaiser/Projects/ZigBee/application/src/MQTTClient.py",
+					"settings":
+					{
+						"buffer_size": 2459,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1782,
+								1782
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1173.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -380,6 +496,12 @@
 				0,
 				1,
 				1
+			],
+			[
+				0,
+				1,
+				1,
+				2
 			]
 		],
 		"cols":
@@ -390,6 +512,7 @@
 		"rows":
 		[
 			0.0,
+			0.5,
 			1.0
 		]
 	},
@@ -419,6 +542,6 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 50.0,
+	"side_bar_width": 142.0,
 	"status_bar_visible": true
 }

@@ -16,11 +16,13 @@
 			},
 			"follower" :
 			{
-				"name" : "MTTQClient",
+				"name" : "MQTTClient",
 				"options" :
 				{
-					"server" : "localhost",
-					"topic" : "sensor_reading"
+					"server" : "127.0.0.1",
+					"port" : 5250, 
+					"topic" : "sensor_reading",
+					"timeout" : 60
 				}
 			}
 		},
