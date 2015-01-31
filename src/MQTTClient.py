@@ -21,11 +21,12 @@ class MQTTClient(fb.FollowerBase):
 	def init(self, logger, options):
 		super(MQTTClient, self).init(logger, options)
 
-
 		self.getOptions(options)
-		self.connect()
 
 		return
+
+	def disconnect(self):
+		self.mqttc.disconnect()
 
 	def connect(self) :
 
@@ -84,8 +85,11 @@ class MQTTClient(fb.FollowerBase):
 
 			try:
 				self.mqttc.publish(self.topic, mStr)
+				self.disconnect()
+
 			except Exception, e:
 				self.logger.critical("MQTTClient:handleMessage : Publish error: " + str(e))
+
 
 		return
 
